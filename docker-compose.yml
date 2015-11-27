@@ -1,0 +1,17 @@
+elasticsearch:
+  image: index.docker.io/library/elasticsearch:latest
+  command: elasticsearch -Des.network.host=0.0.0.0
+  ports:
+  - 9200:9200
+kibana:
+  image: index.docker.io/library/kibana:latest
+  links:
+  - elasticsearch
+  ports:
+  - 5601:5601
+logstash:
+  image: index.docker.io/library/logstash:latest
+  links:
+  - elasticsearch
+  ports:
+  - 5000:5000
