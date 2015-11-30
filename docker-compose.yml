@@ -1,17 +1,29 @@
-elasticsearch:
-  image: index.docker.io/library/elasticsearch:latest
+lib_mongo:
+  image: library/mongo:latest
+  command: mongod --dbpath /data --replSet analytics0 --storageEngine wiredTiger
+  volumes: 
+  - ./data:/data
+  ports:
+  - 27017:27017
+lib_elasticsearch:
+  image: library/elasticsearch:latest
   command: elasticsearch -Des.network.host=0.0.0.0
   ports:
   - 9200:9200
-kibana:
-  image: index.docker.io/library/kibana:latest
+lib_kibana:
+  image: library/kibana:latest
   links:
-  - elasticsearch
+  - lib_elasticsearch
   ports:
   - 5601:5601
-logstash:
-  image: index.docker.io/library/logstash:latest
+lib_logstash:
+  image: library/logstash:latest
   links:
-  - elasticsearch
+  - lib_elasticsearch
   ports:
   - 5000:5000
+user_mongo_connector:
+  image: yeasy/mongo-connector:latest
+  links:
+  - lib_mongo
+  - lib_elasticsearch
