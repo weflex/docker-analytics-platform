@@ -1,29 +1,26 @@
-lib_mongo:
-  image: library/mongo:latest
-  command: mongod --dbpath /data --replSet analytics0 --storageEngine wiredTiger
-  volumes: 
-  - ./data:/data
+mongo:
+  image: mongo:latest
+  command: mongod --port 27017 --dbpath /data/db --replSet rs0 --storageEngine wiredTiger
+  volumes:
+  - ./data/db:/data/db
   ports:
   - 27017:27017
-lib_elasticsearch:
-  image: library/elasticsearch:latest
+
+elasticsearch:
+  image: elasticsearch:latest
   command: elasticsearch -Des.network.host=0.0.0.0
   ports:
   - 9200:9200
-lib_kibana:
-  image: library/kibana:latest
-  links:
-  - lib_elasticsearch
-  ports:
-  - 5601:5601
-lib_logstash:
-  image: library/logstash:latest
-  links:
-  - lib_elasticsearch
-  ports:
-  - 5000:5000
-user_mongo_connector:
+
+mongo_connector:
   image: yeasy/mongo-connector:latest
   links:
-  - lib_mongo
-  - lib_elasticsearch
+  - mongo
+  - elasticsearch
+
+kibana:
+  image: kibana:latest
+  links:
+  - elasticsearch
+  ports:
+  - 5601:5601
