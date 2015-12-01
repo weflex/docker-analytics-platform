@@ -5,8 +5,6 @@ up:
 	- sleep 1
 	- docker run -d --name mongo_connector --link=mongo:mongo --link=elasticsearch:elasticsearch yeasy/mongo-connector
 
-	docker run -d --name mongo_connector --env=MONGO=api-staging.theweflex.com:27017 --link=elasticsearch:elasticsearch yeasy/mongo-connector
-
 down:
 	- docker kill mongo_connector
 	- docker kill kibana
