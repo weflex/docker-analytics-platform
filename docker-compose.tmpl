@@ -1,0 +1,17 @@
+elasticsearch:
+  image: elasticsearch:latest
+  command: elasticsearch -Des.network.host=0.0.0.0
+kibana:
+  image: kibana:latest
+  links:
+    - elasticsearch:elasticsearch
+  ports:
+    - 5601:5601
+mongo_connector:
+  image: weflex/mongo-connector:latest
+  links:
+    - elasticsearch:elasticsearch
+  environment:
+    - MONGO=%mongo%
+    - MONGO_USERNAME=%mongo.username%
+    - MONGO_PASSWORD=%mongo.password%
